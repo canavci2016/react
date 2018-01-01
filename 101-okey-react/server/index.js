@@ -32,9 +32,9 @@ io.on('connection', function (socket) {
         if (rooms) {
             for (var room in rooms) {
                 if (!rooms[room].hasOwnProperty(room)) {
-                    var Obj={
-                        name:room,
-                        clients:[]
+                    var Obj = {
+                        name: room,
+                        clients: []
                     };
 
                     //var roster = io.sockets.clients("can");
@@ -67,10 +67,18 @@ io.on('connection', function (socket) {
         socket.emit('me', {nick: socket.nickname});
         updateNickNames();
         updateRooms();
+
     });
 
+    socket.on('isLogin', function (data, callback) {
+        if (socket.nickname == undefined)
+            callback(102);
+        else
+            callback(101);
 
-    socket.on('private_message', function (obj, callback) {
+    });
+
+    socket.on('privateMessage', function (obj, callback) {
         if (obj.user === undefined || obj.msg == undefined)
             callback(401);
 
@@ -112,4 +120,4 @@ io.on('connection', function (socket) {
 
 
 });
-io.listen(3000);
+io.listen(8000);

@@ -1,15 +1,15 @@
 /*
-* Status Codes
-*
-* 101: user exists
-* 102: user not exists
-* 103: selected user is the same as authenticated user
-* 202: user login success
-* 203: room create success
-*
-* 401: missing object fields
-*
-* */
+ * Status Codes
+ *
+ * 101: user exists
+ * 102: user not exists
+ * 103: selected user is the same as authenticated user
+ * 202: user login success
+ * 203: room create success
+ *
+ * 401: missing object fields
+ *
+ * */
 
 
 var io = require('socket.io')();
@@ -39,8 +39,8 @@ io.on('connection', function (socket) {
 
                     //var roster = io.sockets.clients("can");
                     /*  roster.forEach(function(client) {
-                         Obj.clients.push(client.nickname);
-                      });*/
+                     Obj.clients.push(client.nickname);
+                     });*/
 
                     availableRooms.push(Obj);
                 }
@@ -55,8 +55,10 @@ io.on('connection', function (socket) {
 
 
     socket.on('login', function (name, callback) {
-        if (name in users)
-            callback(101);
+        if (name in users) {
+            return callback(101);
+        }
+
 
         callback(202);
         socket.nickname = name;
@@ -67,14 +69,16 @@ io.on('connection', function (socket) {
         socket.emit('me', {nick: socket.nickname});
         updateNickNames();
         updateRooms();
+        socket.emit('isLogin', {code:101,nickname:socket.nickname});
 
     });
 
-    socket.on('isLogin', function (data, callback) {
-        if (socket.nickname == undefined)
-            callback(102);
+    socket.on('isLogin', function (data) {
+        if (socket.nickname === undefined) {
+            socket.emit('isLogin', {code:102,nickname:''});
+        }
         else
-            callback(101);
+            socket.emit('isLogin', {code:101,nickname:socket.nickname});
 
     });
 

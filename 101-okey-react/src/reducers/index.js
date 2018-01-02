@@ -1,19 +1,9 @@
-import {LIST_ROOMS} from "../constants/constants";
+import {combineReducers} from 'redux';
 
-export  default (state=[], action)=>
-{
+import  user from './reducer_user';
 
-    switch (action.type)
-    {
-        case LIST_ROOMS:
-            const  {rooms}=action;
-            return   {
-                rooms
-            };
-        default:
-            return state;
-
-    }
+export default  combineReducers({
+    user
 
 
-}
+});

@@ -1,7 +1,15 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+
 import {Tabs, Tab} from 'react-bootstrap-tabs';
 
 class App extends Component {
+
+
+    componentDidMount()
+    {
+        console.log('this.props',this.props);
+    }
 
     render() {
         return (
@@ -13,7 +21,7 @@ class App extends Component {
                         <Tab label="Hesabım">
                             <h3>Hesap Detayları</h3>
                             <ul id="rooms">
-                                <li>Oda 1</li>
+                                <li>Nickiniz : {this.props.user.nick}</li>
                                 <li>Oda 2</li>
                                 <li>Oda 3</li>
                                 <li>Oda 4</li>
@@ -64,5 +72,11 @@ class App extends Component {
 
 }
 
+function mapStateToProps(state)
+{
+const  {user}=state;
+    return {user};
+}
 
-export default App;
+
+export default connect(mapStateToProps,null)(App);

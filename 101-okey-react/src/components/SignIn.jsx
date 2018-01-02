@@ -1,30 +1,30 @@
 import React, {Component} from 'react';
-import  {FormGroup,ControlLabel,FormControl,Button} from 'react-bootstrap';
+import  {FormGroup,ControlLabel,FormControl,Button,Label} from 'react-bootstrap';
 import {socket} from "../constants/socket-io-client";
 
 class SignIn extends Component {
 
 
-    constructor(props)
-    {
+    constructor(props) {
         super(props);
 
-        this.state={
-            nick:''
+        this.state = {
+            nick: '',
+            error: {
+                message: ''
+            }
         }
 
     }
 
-    login()
-    {
-
-        console.log('this props',this.state.nick);
+    login() {
         const {nick}=this.state;
+        socket.emit('login', nick, res=> {
+            if (res === 101)
+                this.setState({error: {message: 'Bu kullanıcı şuan online durumdadır'}});
 
-        socket.emit('login',nick,function (res) {
-            console.log(res);
-        })
 
+        });
     }
 
 
@@ -41,14 +41,15 @@ class SignIn extends Component {
                             <ControlLabel>NickName</ControlLabel>
 
                             <FormControl onChange={event=>{this.setState({nick:event.target.value})}}
-                                id="formControlsText"
-                                type="text"
-                                label="Text"
+                                         id="formControlsText"
+                                         type="text"
+                                         label="Text"
                                          value={this.state.nick}
-                                placeholder="Enter NickName Your Nickname Must be unique"
+                                         placeholder="Enter NickName Your Nickname Must be unique"
                             />
-                        </FormGroup>
+                            <Label bsStyle="danger">{this.state.error.message}</Label>
 
+                        </FormGroup>
 
 
                         <Button onClick={()=>this.login()} type="submit">

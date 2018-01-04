@@ -115,6 +115,12 @@ io.on('connection', function (socket) {
 
     });
 
+    socket.on('roomList', function (data,callback) {
+
+        callback(findRooms());
+    });
+
+
 
     socket.on('disconnect', function (data) {
         if (!socket.nickname) return;

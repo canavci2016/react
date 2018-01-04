@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import {Tabs, Tab} from 'react-bootstrap-tabs';
+import  RoomList from './RoomList';
 
 class App extends Component {
 
@@ -14,14 +15,12 @@ class App extends Component {
     render() {
         return (
             <div className="container">
-
-
                 <div className="row">
                     <Tabs onSelect={(index, label) => console.log(label + ' selected')}>
                         <Tab label="Hesabım">
                             <h3>Hesap Detayları</h3>
                             <ul id="rooms">
-                                <li>Nickiniz : {this.props.user.nick}</li>
+                                <li>Hoş geldin : <strong>{this.props.user.nick}</strong></li>
                                 <li>Oda 2</li>
                                 <li>Oda 3</li>
                                 <li>Oda 4</li>
@@ -30,13 +29,7 @@ class App extends Component {
                         </Tab>
                         <Tab label="Masalar">
                             <h3>Odalar</h3>
-                            <ul id="rooms">
-                                <li>Oda 1</li>
-                                <li>Oda 2</li>
-                                <li>Oda 3</li>
-                                <li>Oda 4</li>
-                            </ul>
-
+                           <RoomList/>
                         </Tab>
                         <Tab label="Online Kullanıcılar">
                             <h2>Online Kullanıcılar</h2>

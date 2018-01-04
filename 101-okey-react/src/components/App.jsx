@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
 import {Tabs, Tab} from 'react-bootstrap-tabs';
 import  RoomList from './RoomList';
 

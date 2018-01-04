@@ -27,26 +27,18 @@ io.on('connection', function (socket) {
     }
 
     function findRooms() {
-        var availableRooms = [];
-        var rooms = io.sockets.adapter.rooms;
-        if (rooms) {
-            for (var room in rooms) {
-                if (!rooms[room].hasOwnProperty(room)) {
-                    var Obj = {
-                        name: room,
-                        clients: []
-                    };
+        var roomList = [];
 
-                    //var roster = io.sockets.clients("can");
-                    /*  roster.forEach(function(client) {
-                     Obj.clients.push(client.nickname);
-                     });*/
+        Object.keys(rooms).forEach(function (key) {
 
-                    availableRooms.push(Obj);
-                }
-            }
-        }
-        return availableRooms;
+            rooms[key].forEach(function (room) {
+             roomList.push({name:room,owner:key});
+
+            });
+
+        });
+
+        return roomList;
     }
 
     function updateRooms() {
@@ -59,26 +51,23 @@ io.on('connection', function (socket) {
             return callback(101);
         }
 
-
         callback(202);
         socket.nickname = name;
-        socket.createdRooms = [];
-
         users[socket.nickname] = socket;
 
         socket.emit('me', {nick: socket.nickname});
         updateNickNames();
         updateRooms();
-        socket.emit('isLogin', {code:101,nickname:socket.nickname});
+        socket.emit('isLogin', {code: 101, nickname: socket.nickname});
 
     });
 
     socket.on('isLogin', function (data) {
         if (socket.nickname === undefined) {
-            socket.emit('isLogin', {code:102,nickname:''});
+            socket.emit('isLogin', {code: 102, nickname: ''});
         }
         else
-            socket.emit('isLogin', {code:101,nickname:socket.nickname});
+            socket.emit('isLogin', {code: 101, nickname: socket.nickname});
 
     });
 
@@ -103,11 +92,16 @@ io.on('connection', function (socket) {
     socket.on('roomCreate', function (data, callback) {
         var roomName = data.name;
 
-        if (socket.createdRooms === undefined)
-            socket.createdRooms = [];
+        if (socket.nickname in rooms) {
 
-        socket.createdRooms.push(roomName);
-        socket.join(roomName);
+        } else
+            rooms[socket.nickname] = [];
+
+
+        rooms[socket.nickname].push(roomName);
+
+
+        //socket.join(roomName);
 
         updateRooms();
 
@@ -115,16 +109,15 @@ io.on('connection', function (socket) {
 
     });
 
-    socket.on('roomList', function (data,callback) {
-
-        callback(findRooms());
+    socket.on('roomList', function (data) {
+        updateRooms();
     });
-
 
 
     socket.on('disconnect', function (data) {
         if (!socket.nickname) return;
 
+        delete rooms[socket.nickname];
         delete users[socket.nickname];
     });
 

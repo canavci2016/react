@@ -6,9 +6,9 @@ import  {roomList} from '../actions';
 class RoomList extends Component {
 
 
-    componentDidMount()
-    {
-        socket.emit('roomList',{}, rooms =>{
+    componentDidMount() {
+        socket.emit('roomList', {});
+        socket.on('rooms', rooms=> {
             this.props.roomList(rooms);
         });
     }
@@ -17,7 +17,7 @@ class RoomList extends Component {
         const {room_list}=this.props;
         return (   <ul id="rooms">
             {
-                room_list.map((room,ind)=>{
+                room_list.map((room, ind)=> {
                     return (<li key={ind}>{room.name}</li>);
                 })
             }
@@ -27,12 +27,11 @@ class RoomList extends Component {
 
 }
 
-function mapStateToProps(state)
-{
+function mapStateToProps(state) {
 
     const {room_list}=state;
-    return  {room_list};
+    return {room_list};
 
 }
 
-export  default connect(mapStateToProps,{roomList})(RoomList);
+export  default connect(mapStateToProps, {roomList})(RoomList);

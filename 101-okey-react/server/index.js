@@ -32,7 +32,7 @@ io.on('connection', function (socket) {
         Object.keys(rooms).forEach(function (key) {
 
             rooms[key].forEach(function (room) {
-             roomList.push({name:room,owner:key});
+             roomList.push({name:room.name,id:room.id,owner:key});
 
             });
 
@@ -98,7 +98,12 @@ io.on('connection', function (socket) {
             rooms[socket.nickname] = [];
 
 
-        rooms[socket.nickname].push(roomName);
+        obj={
+            name:roomName,
+            id:Math.round(+new Date()/1000)
+        };
+
+        rooms[socket.nickname].push(obj);
 
 
         //socket.join(roomName);
@@ -120,7 +125,6 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function (data) {
         if (!socket.nickname) return;
 
-        console.log(socket.nickname);
         delete rooms[socket.nickname];
         delete users[socket.nickname];
 

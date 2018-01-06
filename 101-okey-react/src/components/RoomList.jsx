@@ -1,7 +1,10 @@
 import  React,{Component} from 'react';
 import {connect} from 'react-redux';
+import  {Label,ListGroup,ListGroupItem,PageHeader} from 'react-bootstrap';
+import  {Link} from  'react-router';
 import {socket} from "../constants/socket-io-client";
 import  {roomList} from '../actions';
+
 
 class RoomList extends Component {
 
@@ -15,13 +18,15 @@ class RoomList extends Component {
 
     render() {
         const {room_list}=this.props;
-        return (   <ul id="rooms">
+        return (   <ListGroup>
             {
                 room_list.map((room, ind)=> {
-                    return (<li key={ind}>{room.name}</li>);
+                    return (<ListGroupItem key={room.id}> <PageHeader>
+                        {room.name} <small>Subtext for header</small>
+                    </PageHeader>  <Link to={'join-room/'+room.id}> <Label bsSize="large" bsStyle="primary">Masaya Katıl &larr;</Label></Link> </ListGroupItem>);
                 })
             }
-        </ul>);
+        </ListGroup>);
     }
 
 

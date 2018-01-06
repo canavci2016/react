@@ -6,13 +6,9 @@ import  {Router,Route,browserHistory} from  'react-router';
 import reducer from "./reducers";
 import  App from './components/App';
 import  SignIn from './components/SignIn';
+import  RoomJoin from './components/RoomJoin';
 import  {socket} from "./constants/socket-io-client";
 import   {signedUser,setSocket} from './actions';
-
-
-
-
-
 
 const  store=createStore(reducer);
 
@@ -28,10 +24,10 @@ socket.on('isLogin',function(res){
             nick:res.nickname
         };
         store.dispatch(signedUser(userObject));
-        browserHistory.push('app');
+        browserHistory.push('/app');
     }
     else
-        browserHistory.replace('signin');
+        browserHistory.replace('/signin');
 
 });
 
@@ -41,6 +37,7 @@ ReactDOM.render(
         <Router path="/" history={browserHistory}>
             <Route path="/app" component={App}/>
             <Route path="/signin" component={SignIn}/>
+            <Route path="join-room/:id" component={RoomJoin}/>
 
         </Router>
     </Provider>

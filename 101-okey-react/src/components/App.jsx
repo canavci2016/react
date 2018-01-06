@@ -4,6 +4,7 @@ import {Tabs, Tab} from 'react-bootstrap-tabs';
 import  RoomList from './RoomList';
 import  CustomerList from './CustomerList';
 import  RoomCreate from './RoomCreate';
+import {Link} from 'react-router';
 
 class App extends Component {
 
@@ -22,7 +23,7 @@ class App extends Component {
                             <h3>Hesap Detayları</h3>
                             <ul id="rooms">
                                 <li>Hoş geldin : <strong>{this.props.user.nick}</strong></li>
-                                <li>Oda 2</li>
+                                <li><Link to='awdawd'>404 TEST</Link></li>
                                 <li>Oda 3</li>
                                 <li>Oda 4</li>
                             </ul>

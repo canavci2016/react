@@ -32,6 +32,16 @@ io.on('connection', function (socket) {
         Object.keys(rooms).forEach(function (key) {
 
             rooms[key].forEach(function (room) {
+                if(key in users)
+                {
+
+                }
+                else
+                {
+                    delete users[key];
+                    return true;
+                }
+
              roomList.push({name:room.name,id:room.id,owner:key});
 
             });

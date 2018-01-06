@@ -7,6 +7,7 @@ import reducer from "./reducers";
 import  App from './components/App';
 import  SignIn from './components/SignIn';
 import  RoomJoin from './components/RoomJoin';
+import  NoMatch from './components/NoMatch';
 import  {socket} from "./constants/socket-io-client";
 import   {signedUser,setSocket} from './actions';
 
@@ -38,7 +39,7 @@ ReactDOM.render(
             <Route path="/app" component={App}/>
             <Route path="/signin" component={SignIn}/>
             <Route path="join-room/:id" component={RoomJoin}/>
-
+            <Route path="*" component={NoMatch}/>
         </Router>
     </Provider>
     ,document.getElementById('root'));

@@ -9,6 +9,11 @@ import  {roomList} from '../actions';
 class RoomList extends Component {
 
 
+    componentWillMount()
+    {
+        console.log('middleware');
+    }
+
     componentDidMount() {
         socket.emit('roomList', {});
         socket.on('rooms', rooms=> {
@@ -17,13 +22,15 @@ class RoomList extends Component {
     }
 
     render() {
+        console.log('render');
+
         const {room_list}=this.props;
         return (   <ListGroup>
             {
                 room_list.map((room, ind)=> {
                     return (<ListGroupItem key={room.id}> <PageHeader>
                         {room.name} <small>Subtext for header</small>
-                    </PageHeader>  <Link to={'join-room/'+room.id}> <Label bsSize="large" bsStyle="primary">Masaya Katıl &larr;</Label></Link> </ListGroupItem>);
+                    </PageHeader>  <Link to={'join-room/'+room.id+'?c=23'}> <Label bsSize="large" bsStyle="primary">Masaya Katıl &larr;</Label></Link> </ListGroupItem>);
                 })
             }
         </ListGroup>);

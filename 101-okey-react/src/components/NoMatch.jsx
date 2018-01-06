@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import  {FormGroup,ControlLabel,FormControl,Button,Label} from 'react-bootstrap';
 import {socket} from "../constants/socket-io-client";
-import Header  from './Header';
-class RoomJoin extends Component {
+
+class NoMatch extends Component {
 
 
     constructor(props) {
@@ -17,13 +17,6 @@ class RoomJoin extends Component {
 
     }
 
-    componentDidMount()
-    {
-        console.log('this.props',this.props);
-        const {id}=this.props.params;
-        console.log(id);
-    }
-
     create() {
         const {nick}=this.state;
         this.setState({nick:''});
@@ -35,14 +28,12 @@ class RoomJoin extends Component {
 
 
     render() {
-        console.log('this props',this.props);
         return (
             <div className="container">
 
-                <Header/>
 
                 <div className="row">
-                    <h1>Masa Aç</h1>
+                    <h1>404 SAYFASI</h1>
 
                     <div className="col-md-12">
                         <FormGroup >
@@ -75,4 +66,4 @@ class RoomJoin extends Component {
 }
 
 
-export default RoomJoin;
+export default NoMatch;

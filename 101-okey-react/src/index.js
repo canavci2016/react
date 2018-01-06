@@ -2,7 +2,7 @@ import React from 'react';
 import  ReactDOM from 'react-dom';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
-import  {Router,Route,browserHistory} from  'react-router';
+import  {Router,Route,browserHistory,Redirect} from  'react-router';
 import reducer from "./reducers";
 import  App from './components/App';
 import  SignIn from './components/SignIn';
@@ -36,6 +36,7 @@ socket.on('isLogin',function(res){
 ReactDOM.render(
     <Provider store={store}>
         <Router path="/" history={browserHistory}>
+            <Redirect from="/awdawd" to='/ccc'/>
             <Route path="/app" component={App}/>
             <Route path="/signin" component={SignIn}/>
             <Route path="join-room/:id" component={RoomJoin}/>

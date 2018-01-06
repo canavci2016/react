@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Tabs, Tab} from 'react-bootstrap-tabs';
 import  RoomList from './RoomList';
+import  CustomerList from './CustomerList';
 import  RoomCreate from './RoomCreate';
 
 class App extends Component {
@@ -36,14 +37,7 @@ class App extends Component {
                         </Tab>
                         <Tab label="Online Kullanıcılar">
                             <h2>Online Kullanıcılar</h2>
-                            <ul id="users">
-                                <li>User 1</li>
-                                <li>User 2</li>
-                                <li>User 3</li>
-                                <li>User 4</li>
-                                <li>User 5</li>
-
-                            </ul>
+                            <CustomerList/>
                         </Tab>
                         <Tab label="Mesajlar">
                             <h2>Mesajlar</h2>

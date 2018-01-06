@@ -113,12 +113,20 @@ io.on('connection', function (socket) {
         updateRooms();
     });
 
+    socket.on('userList', function (data) {
+        updateNickNames();
+    });
 
     socket.on('disconnect', function (data) {
         if (!socket.nickname) return;
 
+        console.log(socket.nickname);
         delete rooms[socket.nickname];
         delete users[socket.nickname];
+
+        updateNickNames();
+        updateRooms();
+
     });
 
 

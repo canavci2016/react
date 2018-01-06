@@ -7,13 +7,21 @@ import reducer from "./reducers";
 import  App from './components/App';
 import  SignIn from './components/SignIn';
 import  {socket} from "./constants/socket-io-client";
-import   {signedUser} from './actions';
+import   {signedUser,setSocket} from './actions';
 
 
+
+
+
+
+const  store=createStore(reducer);
+
+store.dispatch(setSocket(socket));
 
 socket.emit('isLogin',{});
 
 socket.on('isLogin',function(res){
+
     if (res.code===101) //authenticed
     {
         const  userObject={
@@ -26,8 +34,6 @@ socket.on('isLogin',function(res){
         browserHistory.replace('signin');
 
 });
-
-const  store=createStore(reducer);
 
 
 ReactDOM.render(

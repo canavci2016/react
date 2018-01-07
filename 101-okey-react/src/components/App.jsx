@@ -4,7 +4,7 @@ import {Tabs, Tab} from 'react-bootstrap-tabs';
 import  RoomList from './RoomList';
 import  CustomerList from './CustomerList';
 import  RoomCreate from './RoomCreate';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 
 class App extends Component {
 

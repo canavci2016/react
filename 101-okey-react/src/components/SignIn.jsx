@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import  {FormGroup,ControlLabel,FormControl,Button,Label} from 'react-bootstrap';
+import {FormGroup, ControlLabel, FormControl, Button, Label} from 'react-bootstrap';
+import  {Link} from 'react-router-dom';
 import {socket} from "../constants/socket-io-client";
 
 class SignIn extends Component {
@@ -12,16 +13,21 @@ class SignIn extends Component {
             nick: '',
             error: {
                 message: ''
+            },
+            success: {
+                message: ''
             }
         }
 
     }
 
     login() {
-        const {nick}=this.state;
-        socket.emit('login', nick, res=> {
+        const {nick} = this.state;
+        socket.emit('login', nick, res => {
             if (res === 101)
-                this.setState({error: {message: 'Bu kullanıcı şuan online durumdadır'}});
+                this.setState({error: {message: 'Boyle bir kullanıcı bulunmamaktadır'}, success: {messsage: ''}});
+            else if (res === 202)
+                this.setState({success: {message: 'Giriş Başarılı'}, error: {message: ''}});
 
 
         });
@@ -37,10 +43,12 @@ class SignIn extends Component {
                     <h1>Sign In</h1>
 
                     <div className="col-md-12">
-                        <FormGroup >
+                        <FormGroup>
                             <ControlLabel>NickName</ControlLabel>
 
-                            <FormControl onChange={event=>{this.setState({nick:event.target.value})}}
+                            <FormControl onChange={event => {
+                                this.setState({nick: event.target.value})
+                            }}
                                          id="formControlsText"
                                          type="text"
                                          label="Text"
@@ -48,11 +56,13 @@ class SignIn extends Component {
                                          placeholder="Enter NickName Your Nickname Must be unique"
                             />
                             <Label bsStyle="danger">{this.state.error.message}</Label>
+                            <Label bsStyle="success">{this.state.success.message}</Label>
+                            <div><Link to={'/signup'}>Yeni Kayıt Aç </Link></div>
 
                         </FormGroup>
 
 
-                        <Button onClick={()=>this.login()} type="submit">
+                        <Button onClick={() => this.login()} type="submit">
                             Login
                         </Button>
                     </div>

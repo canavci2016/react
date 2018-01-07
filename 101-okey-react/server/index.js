@@ -13,6 +13,14 @@
 
 
 var io = require('socket.io')();
+var database = require('../src/constants/database');
+var mysql=require('mysql');
+var mysqlCon = mysql.createConnection(database.mysql);
+
+mysqlCon.connect(function(err) {
+    if (err) throw err;
+});
+
 
 var users = {};
 
@@ -57,18 +65,22 @@ io.on('connection', function (socket) {
 
 
     socket.on('login', function (name, callback) {
-        if (name in users) {
-            return callback(101);
-        }
 
-        callback(202);
-        socket.nickname = name;
-        users[socket.nickname] = socket;
+        mysqlCon.query(`SELECT * FROM users where nick="${name}"`, function (err, result, fields) {
+            if (err) throw err;
 
-        socket.emit('me', {nick: socket.nickname});
-        updateNickNames();
-        updateRooms();
-        socket.emit('isLogin', {code: 101, nickname: socket.nickname});
+            if(result.length==0)
+                return callback(101);
+
+            socket.nickname = result.nick;
+            users[socket.nickname] = socket;
+            socket.emit('me', {nick: socket.nickname});
+            updateNickNames();
+            updateRooms();
+            socket.emit('isLogin', {code: 101, nickname: socket.nickname});
+           return callback(202);
+
+        });
 
     });
 

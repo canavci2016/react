@@ -1,46 +1,64 @@
 import React from 'react';
-import  ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
-import  {Router,Route,browserHistory,Redirect} from  'react-router';
+import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
 import reducer from "./reducers";
-import  App from './components/App';
-import  SignIn from './components/SignIn';
-import  RoomJoin from './components/RoomJoin';
-import  NoMatch from './components/NoMatch';
-import  {socket} from "./constants/socket-io-client";
-import   {signedUser,setSocket} from './actions';
+import App from './components/App';
+import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
+import RoomJoin from './components/RoomJoin';
+import NoMatch from './components/NoMatch';
+import {socket} from "./constants/socket-io-client";
+import {signedUser} from './actions';
 
-const  store=createStore(reducer);
+const store = createStore(reducer);
 
-store.dispatch(setSocket(socket));
 
-socket.emit('isLogin',{});
 
-socket.on('isLogin',function(res){
+const checkAuth = () => {
+    socket.emit('isLogin', {});
 
-    if (res.code===101) //authenticed
-    {
-        const  userObject={
-            nick:res.nickname
-        };
-        store.dispatch(signedUser(userObject));
-        browserHistory.push('/app');
-    }
-    else
-        browserHistory.replace('/signin');
+    socket.on('isLogin', res => {
+        console.log(res);
 
-});
+        if (res.code === 101) //authenticed
+        {
+            const userObject = {
+                nick: res.nickname
+            };
+            store.dispatch(signedUser(userObject));
+            return true;
+        }
+        else
+            return false;
+
+
+    });
+};
+
+const AuthRoute = ({component: Component, ...rest}) => (
+    <Route {...rest} render={props => (
+        checkAuth() ? (
+            <Component {...props}/>
+        ) : (
+            <Redirect to={{pathname: '/signin'}}/>
+        )
+    )}/>
+);
 
 
 ReactDOM.render(
     <Provider store={store}>
-        <Router path="/" history={browserHistory}>
-            <Redirect from="/awdawd" to='/ccc'/>
-            <Route path="/app" component={App}/>
-            <Route path="/signin" component={SignIn}/>
-            <Route path="join-room/:id" component={RoomJoin}/>
-            <Route path="*" component={NoMatch}/>
+        <Router path="/">
+            <Switch>
+                <AuthRoute exact path="/app" component={App}/>
+                <AuthRoute exact path="/join-room/:id" component={RoomJoin}/>
+                <Redirect from="/awdawd" to='/ccc'/>
+                <Route path="/signin" component={SignIn}/>
+                <Route path="/signup" component={SignUp}/>
+                <Route path="*" component={NoMatch}/>
+            </Switch>
         </Router>
     </Provider>
-    ,document.getElementById('root'));
+    , document.getElementById('root'));

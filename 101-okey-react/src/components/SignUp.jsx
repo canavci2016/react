@@ -25,6 +25,11 @@ class SignIn extends Component {
 
     }
 
+    componentWillUpdate(nextProps, nextState)
+    {
+        console.log('adwawd');
+    }
+
     login() {
         const {nick} = this.state;
         socket.emit('login', nick, res => {

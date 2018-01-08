@@ -35,6 +35,9 @@ const checkAuth = () => {
 
 
     });
+
+
+
 };
 
 const AuthRoute = ({component: Component, ...rest}) => (

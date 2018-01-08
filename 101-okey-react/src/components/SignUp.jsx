@@ -25,19 +25,24 @@ class SignIn extends Component {
 
     }
 
-    componentWillUpdate(nextProps, nextState)
-    {
-        console.log('adwawd');
+    /*
+     * state ve proplar yüklenmeden önce çalışır
+     * */
+    componentWillUpdate(nextProps, nextState) {
+        nextState.facebook_id = Date.now();
     }
 
-    login() {
-        const {nick} = this.state;
-        socket.emit('login', nick, res => {
-            if (res === 101)
-                this.setState({error: {message: 'Boyle bir kullanıcı bulunmamaktadır'}, success: {messsage: ''}});
-            else if (res === 202)
-                this.setState({success: {message: 'Giriş Başarılı'}, error: {message: ''}});
+    register() {
+        const {name,surname,email,nick,facebook_id} = this.state;
+        const obj = {name, surname, email, nick, facebook_id};
 
+        socket.emit('register', obj, res => {
+            if (res === 101)
+                this.setState({error: {message: 'Boyle bir kullanıcı bulunmaktadır.'}, success: {messsage: ''}});
+            else if (res === 202)
+                this.setState({success: {message: 'Kayıt Başarılı'}, error: {message: ''}});
+            else if (res === 402)
+                this.setState({error: {message: 'Servis bağlantı hatası ( Error Message : Mysql Hatası)'}, success: {messsage: ''}});
 
         });
     }
@@ -46,7 +51,6 @@ class SignIn extends Component {
     render() {
         return (
             <div className="container">
-
 
                 <div className="row">
                     <h1>Kayıt Ol</h1>
@@ -100,7 +104,7 @@ class SignIn extends Component {
                         </FormGroup>
 
 
-                        <Button onClick={() => this.login()} type="submit">
+                        <Button onClick={() => this.register()} type="submit">
                             Kayıt Ol
                         </Button>
                     </div>

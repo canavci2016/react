@@ -28,6 +28,8 @@ class SignIn extends Component {
                 this.setState({error: {message: 'Boyle bir kullanıcı bulunmamaktadır'}, success: {messsage: ''}});
             else if (res === 202)
                 this.setState({success: {message: 'Giriş Başarılı'}, error: {message: ''}});
+            else if (res === 402)
+                this.setState({error: {message: 'Servis bağlantı hatası ( Error Message : Mysql Hatası)'}, success: {messsage: ''}});
 
 
         });

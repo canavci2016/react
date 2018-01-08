@@ -8,6 +8,7 @@
  * 203: room create success
  *
  * 401: missing object fields
+ * 402: mysql error
  *
  * */
 
@@ -67,7 +68,8 @@ io.on('connection', function (socket) {
     socket.on('login', function (name, callback) {
 
         mysqlCon.query(`SELECT * FROM users where nick="${name}"`, function (err, result, fields) {
-            if (err) throw err;
+            if (err)
+                return callback(402);
 
             if(result.length==0)
                 return callback(101);
@@ -83,6 +85,41 @@ io.on('connection', function (socket) {
         });
 
     });
+
+
+    socket.on('register', function (obj, callback) {
+
+        var sql=`SELECT * FROM users where nick="${obj.nick}" || email="${obj.email}" `;
+        mysqlCon.query(sql, function (err, result, fields) {
+            if (err)
+                return callback(402);
+
+            if(result.length>0)
+                return callback(101);
+
+
+
+             sql = `INSERT INTO users (name, surname,email,nick,facebook_id) VALUES ('${obj.name}', '${obj.surname}','${obj.email}','${obj.nick}','${obj.facebook_id}')`;
+            mysqlCon.query(sql, function (err, result) {
+                if (err)
+                    return callback(402);
+
+
+                socket.nickname = result.nick;
+                users[socket.nickname] = socket;
+                socket.emit('me', {nick: socket.nickname});
+                updateNickNames();
+                updateRooms();
+                socket.emit('isLogin', {code: 101, nickname: socket.nickname});
+                return callback(202);
+
+            });
+
+
+        });
+
+    });
+
 
     socket.on('isLogin', function (data) {
         if (socket.nickname === undefined) {

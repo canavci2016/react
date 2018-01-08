@@ -17,6 +17,8 @@ const store = createStore(reducer);
 
 
 const checkAuth = () => {
+
+    console.log("adawd");
     socket.emit('isLogin', {});
 
     socket.on('isLogin', res => {

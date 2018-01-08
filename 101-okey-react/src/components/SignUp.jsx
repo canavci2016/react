@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {FormGroup, ControlLabel, FormControl, Button, Label} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import {Link,withRouter} from 'react-router-dom';
+
 import {socket} from "../constants/socket-io-client";
 
-class SignIn extends Component {
+class SignUp extends Component {
 
 
     constructor(props) {
@@ -40,7 +41,11 @@ class SignIn extends Component {
             if (res === 101)
                 this.setState({error: {message: 'Boyle bir kullanıcı bulunmaktadır.'}, success: {messsage: ''}});
             else if (res === 202)
+            {
                 this.setState({success: {message: 'Kayıt Başarılı'}, error: {message: ''}});
+             this.props.history.push('/signin');
+
+            }
             else if (res === 402)
                 this.setState({error: {message: 'Servis bağlantı hatası ( Error Message : Mysql Hatası)'}, success: {messsage: ''}});
 
@@ -119,4 +124,4 @@ class SignIn extends Component {
 }
 
 
-export default SignIn;
+export default withRouter(SignUp);

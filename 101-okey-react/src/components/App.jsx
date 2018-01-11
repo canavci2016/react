@@ -1,46 +1,44 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Tabs, Tab} from 'react-bootstrap-tabs';
-import  RoomList from './RoomList';
-import  CustomerList from './CustomerList';
-import  RoomCreate from './RoomCreate';
+import {Tabs,Tab} from 'react-bootstrap';
+import RoomList from './RoomList';
+import CustomerList from './CustomerList';
+import RoomCreate from './RoomCreate';
 import {Link} from 'react-router-dom';
 
 class App extends Component {
 
 
-    componentDidMount()
-    {
-        console.log('this.props',this.props);
+    componentDidMount() {
+        //console.log('this.props',this.props);
     }
 
     render() {
+
         return (
             <div className="container">
                 <div className="row">
-                    <Tabs onSelect={(index, label) => console.log(label + ' selected')}>
-                        <Tab label="Hesabım">
-                            <h3>Hesap Detayları</h3>
+                    <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
+                        <Tab eventKey={1} title="Tab 1">
                             <ul id="rooms">
                                 <li>Hoş geldin : <strong>{this.props.user.token}</strong></li>
                                 <li><Link to='awdawd'>404 TEST</Link></li>
                                 <li>Oda 3</li>
                                 <li>Oda 4</li>
-                            </ul>
-
+                            </ul>                        </Tab>
+                        <Tab eventKey={2} title="Masalar">
+                            <h3>Masalar</h3>
+                            <RoomList/>
                         </Tab>
-                        <Tab label="Masalar">
-                            <h3>Odalar</h3>
-                           <RoomList/>
+                        <Tab eventKey={3} title="Masa Aç">
+                            <RoomCreate/>
                         </Tab>
-                        <Tab label="Masa Aç">
-                           <RoomCreate/>
-                        </Tab>
-                        <Tab label="Online Kullanıcılar">
+                        <Tab eventKey={4} title="Online Kullanıcılar">
                             <h2>Online Kullanıcılar</h2>
                             <CustomerList/>
                         </Tab>
-                        <Tab label="Mesajlar">
+
+                        <Tab eventKey={5} title=" Mesajlar">
                             <h2>Mesajlar</h2>
                             <ul id="users">
                                 <li>User 1</li>
@@ -54,6 +52,7 @@ class App extends Component {
                     </Tabs>
 
 
+
                 </div>
             </div>
 
@@ -63,11 +62,10 @@ class App extends Component {
 
 }
 
-function mapStateToProps(state)
-{
-const  {user}=state;
+function mapStateToProps(state) {
+    const {user} = state;
     return {user};
 }
 
 
-export default connect(mapStateToProps,null)(App);
+export default connect(mapStateToProps, null)(App);

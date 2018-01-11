@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import  {Link} from 'react-router';
+import  {Link} from 'react-router-dom';
 import  {Navbar,MenuItem,Nav,NavItem,NavDropdown} from 'react-bootstrap';
 import {socket} from "../constants/socket-io-client";
 class Header extends Component {

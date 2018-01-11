@@ -9,8 +9,6 @@ export function signedUser(userObject) {
     return action;
 
 }
-
-
 export function roomList(rooms) {
     const action = {
         type: ROOM_LIST,

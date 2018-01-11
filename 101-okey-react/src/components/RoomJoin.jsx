@@ -20,7 +20,7 @@ class RoomJoin extends Component {
     componentDidMount()
     {
         console.log('this.props',this.props);
-        const {id}=this.props.params;
+        const {id}=this.props.match.params;
         console.log(id);
     }
 

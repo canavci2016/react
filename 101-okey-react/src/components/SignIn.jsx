@@ -28,6 +28,8 @@ class SignIn extends Component {
         const {nick} = this.state;
         socket.emit('login', nick, res => {
             const {code,token}=res;
+
+
             if (code === 101)
                 this.setState({error: {message: 'Boyle bir kullanıcı bulunmamaktadır'}, success: {messsage: ''}});
             else if (code === 202)
@@ -37,7 +39,7 @@ class SignIn extends Component {
 
                 this.props.signedUser(userObject);
 
-                //this.props.history.push('/signin');
+                this.props.history.push('/app');
 
             }
             else if (code === 402)
@@ -95,7 +97,6 @@ class SignIn extends Component {
 
 function mapStateToProps(state)
 {
-    console.log(state);
     const  {user}=state;
 
     return {

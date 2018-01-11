@@ -81,7 +81,6 @@ io.on('connection', function (socket) {
 
             socket.nickname = result.nick;
             users[socket.nickname] = socket;
-            socket.emit('me', {nick: socket.nickname});
             updateNickNames();
             updateRooms();
 
@@ -118,7 +117,6 @@ io.on('connection', function (socket) {
 
                 socket.nickname = result.nick;
                 users[socket.nickname] = socket;
-                socket.emit('me', {nick: socket.nickname});
                 updateNickNames();
                 updateRooms();
                 socket.emit('isLogin', {code: 101, nickname: socket.nickname});

@@ -1,4 +1,4 @@
-import React from 'react';
+import React  from 'react';
 import ReactDOM from 'react-dom';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
@@ -9,8 +9,13 @@ import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import RoomJoin from './components/RoomJoin';
 import NoMatch from './components/NoMatch';
-import {socket} from "./constants/socket-io-client";
-import {signedUser} from './actions';
+import  jwt_decode from 'jwt-decode';
+
+
+
+
+
+
 
 const store = createStore(reducer);
 
@@ -18,25 +23,20 @@ const store = createStore(reducer);
 
 const checkAuth = () => {
 
-    console.log("adawd");
-    socket.emit('isLogin', {});
 
-    socket.on('isLogin', res => {
-        console.log(res);
+    const state=store.getState();
 
-        if (res.code === 101) //authenticed
-        {
-            const userObject = {
-                nick: res.nickname
-            };
-            store.dispatch(signedUser(userObject));
-            return true;
-        }
-        else
-            return false;
+    let jwtRes=jwt_decode(state.user.token);
+    let Now=Math.round(+new Date()/1000);
+
+    console.log('state',state);
+    console.log('jwtRes',jwtRes);
+
+    let result=(state.user.token!=null && jwtRes.exp > Now )?true:false;
 
 
-    });
+
+    return result;
 
 
 

@@ -1,7 +1,7 @@
 import  React,{Component} from 'react';
 import {connect} from 'react-redux';
 import  {Label,ListGroup,ListGroupItem,PageHeader} from 'react-bootstrap';
-import  {Link} from  'react-router';
+import  {Link} from  'react-router-dom';
 import {socket} from "../constants/socket-io-client";
 import  {roomList} from '../actions';
 

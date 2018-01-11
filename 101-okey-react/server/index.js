@@ -18,12 +18,8 @@ var database = require('../src/constants/database');
 var jwt = require('jsonwebtoken');
 const SECRET_KEY = require('../src/constants/server_secret_key');
 
-var token = jwt.sign({
-    exp: Math.floor(Date.now() / 1000) + (60 * 60),
-    data: {name:'can',surname:'avci',age:'23'}
-}, SECRET_KEY);
 
-console.log(token);
+
 var mysql=require('mysql');
 var mysqlCon = mysql.createConnection(database.mysql);
 
@@ -78,18 +74,24 @@ io.on('connection', function (socket) {
 
         mysqlCon.query(`SELECT * FROM users where nick="${name}"`, function (err, result, fields) {
             if (err)
-                return callback(402);
+                return callback({code:402,token:null});
 
             if(result.length==0)
-                return callback(101);
+                return callback({code:101,token:null});
 
             socket.nickname = result.nick;
             users[socket.nickname] = socket;
             socket.emit('me', {nick: socket.nickname});
             updateNickNames();
             updateRooms();
-            socket.emit('isLogin', {code: 101, nickname: socket.nickname});
-           return callback(202);
+
+            var token = jwt.sign({
+                exp: Math.floor(Date.now() / 1000) + (60 * 60),
+                data: {name:'can',surname:'avci',age:'23'}
+            }, SECRET_KEY);
+
+
+           return callback({code:202,token:token});
 
         });
 

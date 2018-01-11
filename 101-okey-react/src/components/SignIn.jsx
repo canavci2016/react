@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {FormGroup, ControlLabel, FormControl, Button, Label} from 'react-bootstrap';
-import  {Link} from 'react-router-dom';
+import  {Link,withRouter} from 'react-router-dom';
+import {signedUser} from '../actions';
 import {socket} from "../constants/socket-io-client";
-import {SECRET} from "../constants/client_secret_key";
+
 
 class SignIn extends Component {
 
@@ -23,15 +25,26 @@ class SignIn extends Component {
     }
 
     login() {
-        console.log(SECRET);
         const {nick} = this.state;
         socket.emit('login', nick, res => {
-            if (res === 101)
+            const {code,token}=res;
+            if (code === 101)
                 this.setState({error: {message: 'Boyle bir kullanıcı bulunmamaktadır'}, success: {messsage: ''}});
-            else if (res === 202)
-                this.setState({success: {message: 'Giriş Başarılı'}, error: {message: ''}});
-            else if (res === 402)
-                this.setState({error: {message: 'Servis bağlantı hatası ( Error Message : Mysql Hatası)'}, success: {messsage: ''}});
+            else if (code === 202)
+            {
+
+                const userObject={ token };
+
+                this.props.signedUser(userObject);
+
+                //this.props.history.push('/signin');
+
+            }
+            else if (code === 402)
+                this.setState({
+                    error: {message: 'Servis bağlantı hatası ( Error Message : Mysql Hatası)'},
+                    success: {messsage: ''}
+                });
 
 
         });
@@ -80,5 +93,15 @@ class SignIn extends Component {
 
 }
 
+function mapStateToProps(state)
+{
+    console.log(state);
+    const  {user}=state;
 
-export default SignIn;
+    return {
+        user
+
+    };
+}
+
+export default withRouter(connect(mapStateToProps,{signedUser})(SignIn));

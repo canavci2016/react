@@ -22,7 +22,7 @@ class App extends Component {
                         <Tab label="Hesabım">
                             <h3>Hesap Detayları</h3>
                             <ul id="rooms">
-                                <li>Hoş geldin : <strong>{this.props.user.nick}</strong></li>
+                                <li>Hoş geldin : <strong>{this.props.user.token}</strong></li>
                                 <li><Link to='awdawd'>404 TEST</Link></li>
                                 <li>Oda 3</li>
                                 <li>Oda 4</li>

@@ -1,4 +1,6 @@
 export const ROOM_LIST='LIST_ROOMS';
 export const USER_LIST='USER_LIST';
-export const SIGNED_USER='SIGNED_USER';
 export const SOCKET='SOCKET';
+export const SIGNED_USER='SIGNED_USER';
+export const SHOW_SIGNED_USER='SHOW_SIGNED_USER';
+export const CLEAR_SIGNED_USER='CLEAR_SIGNED_USER';

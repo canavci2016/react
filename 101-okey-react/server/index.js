@@ -15,6 +15,15 @@
 
 var io = require('socket.io')();
 var database = require('../src/constants/database');
+var jwt = require('jsonwebtoken');
+const SECRET_KEY = require('../src/constants/server_secret_key');
+
+var token = jwt.sign({
+    exp: Math.floor(Date.now() / 1000) + (60 * 60),
+    data: {name:'can',surname:'avci',age:'23'}
+}, SECRET_KEY);
+
+console.log(token);
 var mysql=require('mysql');
 var mysqlCon = mysql.createConnection(database.mysql);
 

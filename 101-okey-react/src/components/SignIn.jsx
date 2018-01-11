@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {FormGroup, ControlLabel, FormControl, Button, Label} from 'react-bootstrap';
 import  {Link} from 'react-router-dom';
 import {socket} from "../constants/socket-io-client";
+import {SECRET} from "../constants/client_secret_key";
 
 class SignIn extends Component {
 
@@ -22,6 +23,7 @@ class SignIn extends Component {
     }
 
     login() {
+        console.log(SECRET);
         const {nick} = this.state;
         socket.emit('login', nick, res => {
             if (res === 101)

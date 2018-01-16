@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
@@ -9,37 +9,25 @@ import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import RoomJoin from './components/RoomJoin';
 import NoMatch from './components/NoMatch';
-import  jwt_decode from 'jwt-decode';
-
-
-
-
-
+import jwt_decode from 'jwt-decode';
+import {socket} from "./constants/socket-io-client";
 
 
 const store = createStore(reducer);
 
 
-
 const checkAuth = () => {
+    const state = store.getState();
+    let jwtRes = jwt_decode(state.user.token);
+    let Now = Math.round(+new Date() / 1000);
 
+    if (state.user.token != null && jwtRes.exp > Now) {
+        //online kullanıcılar olarak ekler
+        socket.emit('logIntoUsers', jwtRes.data.nick);
+        return true;
+    }
 
-    const state=store.getState();
-
-    let jwtRes=jwt_decode(state.user.token);
-    let Now=Math.round(+new Date()/1000);
-
-    console.log('state',state);
-    console.log('jwtRes',jwtRes);
-
-    let result=(state.user.token!=null && jwtRes.exp > Now )?true:false;
-
-
-
-    return result;
-
-
-
+    return false;
 };
 
 const AuthRoute = ({component: Component, ...rest}) => (

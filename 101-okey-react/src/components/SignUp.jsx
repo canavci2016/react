@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {FormGroup, ControlLabel, FormControl, Button, Label} from 'react-bootstrap';
-import {Link,withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 
 import {socket} from "../constants/socket-io-client";
+import {connect} from "react-redux";
+import {signedUser} from "../actions";
 
 class SignUp extends Component {
 
@@ -34,20 +36,25 @@ class SignUp extends Component {
     }
 
     register() {
-        const {name,surname,email,nick,facebook_id} = this.state;
+        const {name, surname, email, nick, facebook_id} = this.state;
         const obj = {name, surname, email, nick, facebook_id};
 
         socket.emit('register', obj, res => {
-            if (res === 101)
-                this.setState({error: {message: 'Boyle bir kullanıcı bulunmaktadır.'}, success: {messsage: ''}});
-            else if (res === 202)
-            {
-                this.setState({success: {message: 'Kayıt Başarılı'}, error: {message: ''}});
-             this.props.history.push('/signin');
 
+            const {code,token} = res;
+
+            if (code === 101)
+                this.setState({error: {message: 'Boyle bir kullanıcı bulunmaktadır.'}, success: {messsage: ''}});
+            else if (code === 202) {
+                const userObject={ token };
+                this.props.signedUser(userObject);
+                this.props.history.push('/signin');
             }
-            else if (res === 402)
-                this.setState({error: {message: 'Servis bağlantı hatası ( Error Message : Mysql Hatası)'}, success: {messsage: ''}});
+            else if (code === 402)
+                this.setState({
+                    error: {message: 'Servis bağlantı hatası ( Error Message : Mysql Hatası)'},
+                    success: {messsage: ''}
+                });
 
         });
     }
@@ -123,5 +130,13 @@ class SignUp extends Component {
 
 }
 
+function mapStateToProps(state) {
+    const {user} = state;
 
-export default withRouter(SignUp);
+    return {
+        user
+
+    };
+}
+
+export default withRouter(connect(mapStateToProps, {signedUser})(SignUp));

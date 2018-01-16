@@ -18,7 +18,7 @@ class App extends Component {
         return (
             <div className="container">
                 <div className="row">
-                    <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
+                    <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
                         <Tab eventKey={1} title="Tab 1">
                             <ul id="rooms">
                                 <li>Hoş geldin : <strong>{this.props.user.token}</strong></li>

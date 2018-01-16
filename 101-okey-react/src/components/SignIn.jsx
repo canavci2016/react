@@ -34,13 +34,9 @@ class SignIn extends Component {
                 this.setState({error: {message: 'Boyle bir kullanıcı bulunmamaktadır'}, success: {messsage: ''}});
             else if (code === 202)
             {
-
                 const userObject={ token };
-
                 this.props.signedUser(userObject);
-
                 this.props.history.push('/app');
-
             }
             else if (code === 402)
                 this.setState({

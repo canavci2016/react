@@ -18,9 +18,17 @@ const store = createStore(reducer);
 
 const checkAuth = () => {
     const state = store.getState();
-    let jwtRes = jwt_decode(state.user.token);
-    let Now = Math.round(+new Date() / 1000);
+    let jwtRes=null;
+    try {
+         jwtRes = jwt_decode(state.user.token);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
 
+
+    let Now = Math.round(+new Date() / 1000);
+    console.log('jwtRes:', jwtRes);
     if (state.user.token != null && jwtRes.exp > Now) {
         //online kullanıcılar olarak ekler
         socket.emit('logIntoUsers', jwtRes.data.nick);

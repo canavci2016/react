@@ -114,22 +114,37 @@ io.on('connection', function (socket) {
                 if (err)
                     return callback({code: 402, token: null});
 
+                var lanstInsertedId=result.insertId;
 
-                socket.nickname = obj.nick;
-                users[socket.nickname] = socket;
-                updateNickNames();
-                updateRooms();
+                 sql = `SELECT * FROM users where id="${lanstInsertedId}" `;
+
+                mysqlCon.query(sql, (err, result, fields) => {
+                    if (err)
+                        return callback({code: 402, token: null});
+
+                    if (result.length == 0)
+                        return callback({code: 102, token: null});
+
+                    socket.nickname = result[0].nick;
+
+                    users[socket.nickname] = socket;
+                    updateNickNames();
+                    updateRooms();
 
 
-                var obj = {
-                    exp: Math.floor(Date.now() / 1000) + (60 * 60),
-                    data: {nick: socket.nickname, page: '1'},
-                };
+                    var obj = {
+                        exp: Math.floor(Date.now() / 1000) + (60 * 60),
+                        data: {nick: socket.nickname, page: '1'},
+                    };
 
 
-                var token = jwt.sign(obj, SECRET_KEY);
+                    var token = jwt.sign(obj, SECRET_KEY);
 
-                return callback({code: 202, token: token});
+                    return callback({code: 202, token: token});
+
+
+
+                });
 
             });
 
@@ -145,7 +160,9 @@ io.on('connection', function (socket) {
             socket.nickname = nickname;
             users[socket.nickname] = socket;
         }
-
+        function updateNickNames() {
+            io.sockets.emit('usernames', Object.keys(users));
+        }
     });
 
     socket.on('privateMessage', function (obj, callback) {

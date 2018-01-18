@@ -45,10 +45,12 @@ class SignUp extends Component {
 
             if (code === 101)
                 this.setState({error: {message: 'Boyle bir kullanıcı bulunmaktadır.'}, success: {messsage: ''}});
+            else if (code === 102)
+                this.setState({error: {message: 'Son eklenen kullanıcı bilgileri getirilemiyor.'}, success: {messsage: ''}});
             else if (code === 202) {
                 const userObject={ token };
                 this.props.signedUser(userObject);
-                this.props.history.push('/signin');
+                this.props.history.push('/app');
             }
             else if (code === 402)
                 this.setState({

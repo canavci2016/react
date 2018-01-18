@@ -39,12 +39,21 @@ io.on('connection', function (socket) {
         io.sockets.emit('usernames', Object.keys(users));
     }
 
+
     function findRooms() {
         var roomList = [];
 
+        var rms= io.nsps['/'].adapter.rooms;
+
+        console.log(rms);
+
         Object.keys(rooms).forEach(function (key) {
 
+
             rooms[key].forEach(function (room) {
+
+
+
                 if (key in users) {
 
                 }
@@ -185,7 +194,6 @@ io.on('connection', function (socket) {
 
     socket.on('roomCreate', function (data, callback) {
 
-        console.log(socket.nickname);
         var roomName = data.name;
 
         if (socket.nickname in rooms) {
@@ -194,16 +202,17 @@ io.on('connection', function (socket) {
             rooms[socket.nickname] = [];
 
 
-        obj = {
+       var obj = {
             name: roomName,
             id: Math.round(+new Date() / 1000)
         };
 
         rooms[socket.nickname].push(obj);
 
+        socket.join(obj.id);
 
-        io.sockets.emit('rooms', findRooms());
 
+        updateRooms();
         callback(203);
 
     });

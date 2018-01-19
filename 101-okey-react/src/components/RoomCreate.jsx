@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import  {FormGroup,ControlLabel,FormControl,Button,Label} from 'react-bootstrap';
 import {socket} from "../constants/socket-io-client";
 
@@ -12,6 +13,9 @@ class RoomCreate extends Component {
             nick: '',
             error: {
                 message: ''
+            },
+            success: {
+                message: ''
             }
         }
 
@@ -19,8 +23,36 @@ class RoomCreate extends Component {
 
     create() {
         const {nick}=this.state;
-        this.setState({nick:''});
-        socket.emit('roomCreate', {name:nick}, res=> {
+        const {token}=this.props.user;
+
+
+        this.setState({nick: ''});
+        socket.emit('roomCreate', {name: nick, token: token}, res=> {
+            const {code}=res;
+
+            if (code === 101) //user not found
+            {
+                this.setState({error: {message: 'Boyle bir kullanıcı bulunmaktadır.'}, success: {messsage: ''}});
+
+            }
+            else if (code === 202) ////Success
+            {
+                this.setState({error: {message: ''}, success: {messsage: 'Oda oluşturuldu.'}});
+
+            }
+            else if (code === 301) ////jwt verify error
+            {
+                this.setState({error: {message: 'JWT Verify Hatası alındı.'}, success: {messsage: ''}});
+
+            }
+            else if (code === 402) //mysql error
+            {
+                this.setState({
+                    error: {message: 'Servis bağlantı hatası ( Error Message : Mysql Hatası)'},
+                    success: {messsage: ''}
+                });
+            }
+
 
         });
 
@@ -47,6 +79,7 @@ class RoomCreate extends Component {
                                          placeholder="Masa Adı"
                             />
                             <Label bsStyle="danger">{this.state.error.message}</Label>
+                            <Label bsStyle="success">{this.state.success.message}</Label>
 
                         </FormGroup>
 
@@ -65,5 +98,15 @@ class RoomCreate extends Component {
 
 }
 
+function mapStateToProps(state) {
 
-export default RoomCreate;
+    const {user}=state;
+
+    return {
+        user
+    };
+
+}
+
+
+export default connect(mapStateToProps, null)(RoomCreate);

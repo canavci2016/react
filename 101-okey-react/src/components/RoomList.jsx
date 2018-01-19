@@ -11,7 +11,7 @@ class RoomList extends Component {
 
     componentWillMount()
     {
-        console.log('middleware');
+
     }
 
     componentDidMount() {
@@ -22,7 +22,6 @@ class RoomList extends Component {
     }
 
     render() {
-        console.log('render');
 
         const {room_list}=this.props;
         return (   <ListGroup>

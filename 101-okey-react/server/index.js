@@ -10,6 +10,8 @@
  * 401: missing object fields
  * 402: mysql error
  *
+ * 301: json verify error
+ *
  * */
 
 
@@ -43,15 +45,13 @@ io.on('connection', function (socket) {
     function findRooms() {
         var roomList = [];
 
-        var rms= io.nsps['/'].adapter.rooms;
+        var rms = io.nsps['/'].adapter.rooms;
 
-        console.log(rms);
 
         Object.keys(rooms).forEach(function (key) {
 
 
             rooms[key].forEach(function (room) {
-
 
 
                 if (key in users) {
@@ -92,7 +92,7 @@ io.on('connection', function (socket) {
 
             var obj = {
                 exp: Math.floor(Date.now() / 1000) + (60 * 60),
-                data: {nick: socket.nickname, page: '1'},
+                data: {nick: socket.nickname, id: result[0].id}
             };
 
 
@@ -123,9 +123,9 @@ io.on('connection', function (socket) {
                 if (err)
                     return callback({code: 402, token: null});
 
-                var lanstInsertedId=result.insertId;
+                var lanstInsertedId = result.insertId;
 
-                 sql = `SELECT * FROM users where id="${lanstInsertedId}" `;
+                sql = `SELECT * FROM users where id="${lanstInsertedId}" `;
 
                 mysqlCon.query(sql, (err, result, fields) => {
                     if (err)
@@ -143,14 +143,13 @@ io.on('connection', function (socket) {
 
                     var obj = {
                         exp: Math.floor(Date.now() / 1000) + (60 * 60),
-                        data: {nick: socket.nickname, page: '1'},
+                        data: {nick: socket.nickname, id: result[0].id}
                     };
 
 
                     var token = jwt.sign(obj, SECRET_KEY);
 
                     return callback({code: 202, token: token});
-
 
 
                 });
@@ -194,26 +193,45 @@ io.on('connection', function (socket) {
 
     socket.on('roomCreate', function (data, callback) {
 
-        var roomName = data.name;
+        var {name,token}=data;
 
-        if (socket.nickname in rooms) {
+        jwt.verify(token, SECRET_KEY, function (err, decoded) {
 
-        } else
-            rooms[socket.nickname] = [];
-
-
-       var obj = {
-            name: roomName,
-            id: Math.round(+new Date() / 1000)
-        };
-
-        rooms[socket.nickname].push(obj);
-
-        socket.join(obj.id);
+            if (err)
+                return callback({code: 301, error: err});
 
 
-        updateRooms();
-        callback(203);
+            mysqlCon.query(`SELECT * FROM users where id="${decoded.data.id}" limit 1`, function (err, result, fields) {
+                if (err)
+                    return callback({code: 402, token: null});
+
+                if (result.length == 0)
+                    return callback({code: 101, token: null});
+
+                sql = `INSERT INTO rooms (name, owner) VALUES ('${name}', '${decoded.data.id}')`;
+
+                mysqlCon.query(sql, (err, result) => {
+                    if (err)
+                        return callback({code: 402, token: null});
+
+                    var lanstInsertedId = result.insertId;
+                    //Kullanıcı ile Tabloyu Bağla
+
+
+                    socket.join(lanstInsertedId);
+
+
+                    updateRooms();
+                    callback({code: 202});
+
+                });
+
+
+            });
+
+
+        });
+
 
     });
 

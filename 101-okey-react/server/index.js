@@ -31,7 +31,7 @@ mysqlCon.connect(function (err) {
 
 var users = {};
 
-var rooms = {};
+var rooms = [];
 
 
 io.on('connection', function (socket) {
@@ -42,37 +42,8 @@ io.on('connection', function (socket) {
     }
 
 
-    function findRooms() {
-        var roomList = [];
-
-        var rms = io.nsps['/'].adapter.rooms;
-
-
-        Object.keys(rooms).forEach(function (key) {
-
-
-            rooms[key].forEach(function (room) {
-
-
-                if (key in users) {
-
-                }
-                else {
-                    delete users[key];
-                    return true;
-                }
-
-                roomList.push({name: room.name, id: room.id, owner: key});
-
-            });
-
-        });
-
-        return roomList;
-    }
-
     function updateRooms() {
-        io.sockets.emit('rooms', findRooms());
+        io.sockets.emit('rooms', rooms);
     }
 
 
@@ -168,9 +139,7 @@ io.on('connection', function (socket) {
             socket.nickname = nickname;
             users[socket.nickname] = socket;
         }
-        function updateNickNames() {
-            io.sockets.emit('usernames', Object.keys(users));
-        }
+        updateNickNames();
     });
 
     socket.on('privateMessage', function (obj, callback) {
@@ -208,21 +177,38 @@ io.on('connection', function (socket) {
                 if (result.length == 0)
                     return callback({code: 101, token: null});
 
-                sql = `INSERT INTO rooms (name, owner) VALUES ('${name}', '${decoded.data.id}')`;
+                sql = `INSERT INTO rooms (name, owner_id) VALUES ('${name}', '${decoded.data.id}')`;
 
                 mysqlCon.query(sql, (err, result) => {
                     if (err)
                         return callback({code: 402, token: null});
 
-                    var lanstInsertedId = result.insertId;
-                    //Kullanıcı ile Tabloyu Bağla
+                    var roomID = result.insertId;
+
+                    sql = `INSERT INTO user_rooms (user_id, room_id) VALUES ('${decoded.data.id}', '${roomID}')`;
+
+                    mysqlCon.query(sql, (err, result) => {
+                        if (err)
+                            return callback({code: 402, token: null});
 
 
-                    socket.join(lanstInsertedId);
+                        mysqlCon.query(`SELECT * , (select count(*) from user_rooms where room_id=r.id ) as members_count FROM rooms as r`, function (err, result, fields) {
+                            if (err)
+                                return callback({code: 402, token: null});
+
+                            rooms=result;
 
 
-                    updateRooms();
-                    callback({code: 202});
+
+                            socket.join(roomID);
+                            updateRooms();
+                            return callback({code: 202});
+
+                        });
+
+
+                    });
+
 
                 });
 

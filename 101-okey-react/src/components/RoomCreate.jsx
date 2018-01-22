@@ -32,24 +32,24 @@ class RoomCreate extends Component {
 
             if (code === 101) //user not found
             {
-                this.setState({error: {message: 'Boyle bir kullanıcı bulunmaktadır.'}, success: {messsage: ''}});
+                this.setState({error: {message: 'Boyle bir kullanıcı bulunmaktadır.'}, success: {message: ''}});
 
             }
             else if (code === 202) ////Success
             {
-                this.setState({error: {message: ''}, success: {messsage: 'Oda oluşturuldu.'}});
+                this.setState({error: {message: ''}, success: {message: 'Oda oluşturuldu.'}});
 
             }
             else if (code === 301) ////jwt verify error
             {
-                this.setState({error: {message: 'JWT Verify Hatası alındı.'}, success: {messsage: ''}});
+                this.setState({error: {message: 'JWT Verify Hatası alındı.'}, success: {message: ''}});
 
             }
             else if (code === 402) //mysql error
             {
                 this.setState({
                     error: {message: 'Servis bağlantı hatası ( Error Message : Mysql Hatası)'},
-                    success: {messsage: ''}
+                    success: {message: ''}
                 });
             }
 

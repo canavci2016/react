@@ -28,7 +28,7 @@ class RoomList extends Component {
             {
                 room_list.map((room, ind)=> {
                     return (<ListGroupItem key={room.id}> <PageHeader>
-                        {room.name} <small>Subtext for header</small>
+                        {room.name} <small>  ({room.members_count}) üye</small>
                     </PageHeader>  <Link to={'join-room/'+room.id+'?c=23'}> <Label bsSize="large" bsStyle="primary">Masaya Katıl &larr;</Label></Link> </ListGroupItem>);
                 })
             }

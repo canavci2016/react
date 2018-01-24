@@ -9,7 +9,6 @@ import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import RoomJoin from './components/RoomJoin';
 import NoMatch from './components/NoMatch';
-import jwt_decode from 'jwt-decode';
 import {socket} from "./constants/socket-io-client";
 
 
@@ -18,20 +17,11 @@ const store = createStore(reducer);
 
 const checkAuth = () => {
     const state = store.getState();
-    let jwtRes=null;
-    try {
-         jwtRes = jwt_decode(state.user.token);
-    } catch (e) {
-        console.log(e);
-        return false;
-    }
-
 
     let Now = Math.round(+new Date() / 1000);
-    console.log('jwtRes:', jwtRes);
-    if (state.user.token != null && jwtRes.exp > Now) {
+    if (state.user.token != null && state.user.exp > Now) {
         //online kullanıcılar olarak ekler
-        socket.emit('logIntoUsers', jwtRes.data.nick);
+        socket.emit('logIntoUsers', state.user.data.nick);
         return true;
     }
 

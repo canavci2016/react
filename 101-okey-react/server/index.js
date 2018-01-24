@@ -162,7 +162,7 @@ io.on('connection', function (socket) {
 
     socket.on('roomCreate', function (data, callback) {
 
-        var {name,token}=data;
+        var {name, token} = data;
 
         jwt.verify(token, SECRET_KEY, function (err, decoded) {
 
@@ -196,8 +196,7 @@ io.on('connection', function (socket) {
                             if (err)
                                 return callback({code: 402, token: null});
 
-                            rooms=result;
-
+                            rooms = result;
 
 
                             socket.join(roomID);
@@ -230,13 +229,36 @@ io.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function (data) {
-        if (!socket.nickname) return;
+        if (socket.nickname) {
+            delete users[socket.nickname];
 
-        delete rooms[socket.nickname];
-        delete users[socket.nickname];
+            mysqlCon.query(`SELECT * FROM users where nick="${socket.nickname}" limit 1`, function (err, result, fields) {
+                if (err)
+                    throw  err;
 
-        updateNickNames();
-        updateRooms();
+                if (result.length == 0)
+                    throw  'User Not Found according to given nick';
+
+                var userId = result[0].id;
+
+                var sql = `DELETE FROM user_rooms WHERE user_id =${userId}`;
+                mysqlCon.query(sql, function (err, result) {
+                    if (err) throw err;
+
+                    mysqlCon.query(`SELECT * , (select count(*) from user_rooms where room_id=r.id ) as members_count FROM rooms as r`, function (err, result, fields) {
+                        if (err)
+                            throw 'MySql Error';
+
+                        rooms = result;
+                        io.sockets.emit('rooms', rooms);
+                        updateNickNames();
+                    });
+
+                });
+
+            });
+        }
+
 
     });
 

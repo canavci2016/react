@@ -13,6 +13,7 @@ let user_default = {
 
 export  default (state = user_default, action)=> {
 
+
     const cookie_name = 'auth_user';
 
     var user_cookie = read_cookie(cookie_name, null);
@@ -35,15 +36,12 @@ export  default (state = user_default, action)=> {
                 userObject = user_default;
             }
 
-
-
             bake_cookie(cookie_name, userObject);
             return userObject;
 
         case CLEAR_SIGNED_USER:
             delete_cookie(cookie_name);
             return user_default;
-
         default:
             return state;
 

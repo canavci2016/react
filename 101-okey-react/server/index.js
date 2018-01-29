@@ -43,6 +43,7 @@ io.on('connection', function (socket) {
 
 
     function updateRooms() {
+
         io.sockets.emit('rooms', rooms);
     }
 

@@ -19,9 +19,9 @@ class App extends Component {
             <div className="container">
                 <div className="row">
                     <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
-                        <Tab eventKey={1} title="Tab 1">
+                        <Tab eventKey={1} title="Hesabım">
                             <ul id="rooms">
-                                <li>Hoş geldin : <strong>{this.props.user.token}</strong></li>
+                                <li>Hoş geldin : <strong>{this.props.user.data.nick}</strong></li>
                                 <li><Link to='awdawd'>404 TEST</Link></li>
                                 <li>Oda 3</li>
                                 <li>Oda 4</li>

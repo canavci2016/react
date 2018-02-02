@@ -43,7 +43,6 @@ io.on('connection', function (socket) {
 
 
     function updateRooms() {
-
         io.sockets.emit('rooms', rooms);
     }
 
@@ -229,7 +228,14 @@ io.on('connection', function (socket) {
         updateNickNames();
     });
 
+
+    socket.on('roomJoin', function (data) {
+        updateRooms();
+    });
+
+
     socket.on('disconnect', function (data) {
+        console.log("disconnect success");
         if (socket.nickname) {
             delete users[socket.nickname];
 
@@ -251,7 +257,8 @@ io.on('connection', function (socket) {
                             throw 'MySql Error';
 
                         rooms = result;
-                        io.sockets.emit('rooms', rooms);
+
+                        updateRooms();
                         updateNickNames();
                     });
 

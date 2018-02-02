@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import  {FormGroup,ControlLabel,FormControl,Button,Label} from 'react-bootstrap';
 import {socket} from "../constants/socket-io-client";
+import {connect} from 'react-redux';
 import Header  from './Header';
 class RoomJoin extends Component {
 
@@ -22,12 +23,13 @@ class RoomJoin extends Component {
         console.log('this.props',this.props);
         const {id}=this.props.match.params;
         console.log(id);
+
     }
 
     create() {
         const {nick}=this.state;
         this.setState({nick:''});
-        socket.emit('roomCreate', {name:nick}, res=> {
+        socket.emit('roomJoin', {name:nick}, res=> {
 
         });
 
@@ -71,6 +73,11 @@ class RoomJoin extends Component {
         );
     }
 
+
+}
+
+function mapStateToProps()
+{
 
 }
 

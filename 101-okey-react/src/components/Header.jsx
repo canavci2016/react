@@ -32,7 +32,7 @@ class Header extends Component {
             <Navbar>
                 <Navbar.Header>
                     <Navbar.Brand>
-                        <Link  to="/app"> 101 Okey</Link>
+                        <Link  to="/app"> Ana Sayfa</Link>
                     </Navbar.Brand>
                 </Navbar.Header>
                 <Nav>

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import  {FormGroup,ControlLabel,FormControl,Button,Label} from 'react-bootstrap';
+import  {FormGroup,ControlLabel,FormControl,Button,Label,Row} from 'react-bootstrap';
 import {socket} from "../constants/socket-io-client";
 
 class RoomCreate extends Component {
@@ -64,13 +64,12 @@ class RoomCreate extends Component {
             <div className="container">
 
 
-                <div className="row">
+                <Row>
                     <h1>Masa Aç</h1>
 
                     <div className="col-md-12">
                         <FormGroup >
                             <ControlLabel>Masa Adı</ControlLabel>
-
                             <FormControl onChange={event=>{this.setState({nick:event.target.value})}}
                                          id="formControlsText"
                                          type="text"
@@ -84,12 +83,12 @@ class RoomCreate extends Component {
                         </FormGroup>
 
 
-                        <Button onClick={()=>this.create()} type="submit">
+                        <Button  onClick={()=>this.create()} type="submit">
                             Oluştur
                         </Button>
                     </div>
 
-                </div>
+                </Row>
             </div>
 
         );

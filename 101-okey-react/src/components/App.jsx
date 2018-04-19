@@ -9,9 +9,32 @@ import Header  from './Header';
 
 class App extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            tick: (new Date()).toString()
+
+        }
+
+    }
+
+
+    tick()
+    {
+        this.setState({
+            tick:(new Date()).toString()
+        });
+    }
+
 
     componentDidMount() {
-        //console.log('this.props',this.props);
+        this.timerID = setInterval(
+            () => this.tick(),
+            1000
+        );
+
+
     }
 
     render() {
@@ -25,7 +48,7 @@ class App extends Component {
                             <ul id="rooms">
                                 <li>Hoş geldin : <strong>{this.props.user.data.nick}</strong></li>
                                 <li><Link to='awdawd'>404 TEST</Link></li>
-                                <li>Oda 3</li>
+                                <li>Time : {this.state.tick}</li>
                                 <li>Oda 4</li>
                             </ul>                        </Tab>
                         <Tab eventKey={2} title="Masalar">

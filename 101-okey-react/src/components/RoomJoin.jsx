@@ -18,11 +18,20 @@ class RoomJoin extends Component {
 
     }
 
-    componentDidMount()
+
+    componentWillMount()
     {
         console.log('this.props',this.props);
         const {id}=this.props.match.params;
-        console.log(id);
+        const user_nick=this.props.user.data.nick;
+
+        socket.emit('logIntoRoom',{room_id:id,user_nick:user_nick});
+
+    }
+
+    componentDidMount()
+    {
+
 
     }
 
@@ -37,7 +46,7 @@ class RoomJoin extends Component {
 
 
     render() {
-        console.log('this props',this.props);
+
         return (
             <div className="container">
 
@@ -76,10 +85,14 @@ class RoomJoin extends Component {
 
 }
 
-function mapStateToProps()
+function mapStateToProps(state)
 {
+    console.log(state);
 
+    var {room_list,user}=state;
+
+    return {room_list,user};
 }
 
 
-export default RoomJoin;
+export  default connect(mapStateToProps, null)(RoomJoin);
